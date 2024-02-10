@@ -8,7 +8,7 @@ import { collection, getDocs } from 'firebase/firestore';
 import SetMarkBtn from '../img/setMarkBtn.png';
 import CheckBtn from '../img/checkBtn.png';
 import * as Font from 'expo-font';
-
+import getDistance from 'geolib/es/getDistance';
 
 const HomeScreen = () => {
     const [showMarker, setShowMarker] = React.useState(false);
@@ -25,11 +25,7 @@ const loadFonts = async () => {
   });
 };
 
-loadFonts(); // Llama a la función para cargar la fuente
-
-    const handleButtonPress = () => {
-      setShowMarker(true); // Actualiza el estado para mostrar el marcador
-    };
+loadFonts();
 
     const mapRef = useRef(null);
     const [markerPosition, setMarkerPosition] = useState(null);
@@ -48,12 +44,36 @@ loadFonts(); // Llama a la función para cargar la fuente
     const check = () => {
       console.log("Check");
       if (currentQuestionIndex < questionsList.length-1){
-        console.log(questionsList[currentQuestionIndex+1].Title);
-        setQuestionIndex(currentQuestionIndex+1);
-        
+       // console.log(questionsList[currentQuestionIndex+1].Title);
+        setShowMarker(true); // Actualiza el estado para mostrar el marcador
+        const { latitude, longitude } = markerPosition;
+        const markerDb = {
+           latitude: parseFloat(questionsList[currentQuestionIndex].Lat),
+          longitude: parseFloat(questionsList[currentQuestionIndex].Lon),
+           };
+
+       const distance = getDistance(
+           {
+             latitude: markerDb.latitude,
+            longitude: markerDb.longitude,
+             },
+           { latitude, longitude }
+             )
+            
+           console.log("Distance: " + distance);        
       }
       
-    }
+    };
+
+    const nextQ = () => {
+      console.log("next question");
+     if (currentQuestionIndex < questionsList.length - 1) {
+      console.log(questionsList[currentQuestionIndex + 1].Title);
+      setQuestionIndex(currentQuestionIndex + 1);
+     
+     }
+    };
+
 
     useEffect(() => { // Funció que es crida al començar. Ve a ser un OnCreate d'Android/start()
       // Función para obtener todos los usuarios
@@ -93,6 +113,16 @@ loadFonts(); // Llama a la función para cargar la fuente
                   {markerPosition && (
                   <Marker coordinate={markerPosition} title="Marcador" description="Este es el centro del mapa" />
                   )}
+                   {showMarker && (
+                    <Marker
+                    coordinate={
+                    {
+                    latitude: parseFloat(questionsList[currentQuestionIndex].Lat),
+                    longitude: parseFloat(questionsList[currentQuestionIndex].Lon)
+                    }}
+                    title="Marcador"
+                    description="Este es el centro del mapa" />
+                   )}
               </MapView>
               <View pointerEvents="none" style={styles.mapCenterMarkerView}>
                 <Image 
