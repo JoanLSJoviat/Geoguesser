@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet, Button} from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
+import MapView, { Marker, Polyline } from 'react-native-maps';
 import CrosshairImage from '../img/pointer.png'
 import RedPin from '../img/RedPin.png'
 import { db } from '../firebaseConfig';
@@ -12,9 +12,13 @@ import getDistance from 'geolib/es/getDistance';
 
 const HomeScreen = () => {
     const [showMarker, setShowMarker] = React.useState(false);
+    const [showPolyline, setShowPolyline] = React.useState(false);
     const [refresh, setRefresh] = useState("");
     const [questionsList, setQuestionsList] = useState([]);
     const [currentQuestionIndex, setQuestionIndex] = useState(0);
+    const mapRef = useRef(null);
+    const [markerPosition, setMarkerPosition] = useState(null);
+    const [markerDbPosition, setMarkerDbPosition] = useState(null);
 
 
 const loadFonts = async () => {
@@ -26,13 +30,9 @@ const loadFonts = async () => {
 };
 
 loadFonts();
-
-    const mapRef = useRef(null);
-    const [markerPosition, setMarkerPosition] = useState(null);
   
     const setMark = async () => {
-        console.log("Hola");
-        if (mapRef.current) {
+        if (mapRef.current && markerPosition === null) {
           const camera = await mapRef.current.getCamera();
           console.log("Latitud:", camera.center.latitude);
           console.log("Longitud:", camera.center.longitude);
@@ -45,22 +45,28 @@ loadFonts();
       console.log("Check");
       if (currentQuestionIndex < questionsList.length-1){
        // console.log(questionsList[currentQuestionIndex+1].Title);
-        setShowMarker(true); // Actualiza el estado para mostrar el marcador
+        setShowMarker(true); 
         const { latitude, longitude } = markerPosition;
         const markerDb = {
            latitude: parseFloat(questionsList[currentQuestionIndex].Lat),
-          longitude: parseFloat(questionsList[currentQuestionIndex].Lon),
+           longitude: parseFloat(questionsList[currentQuestionIndex].Lon),
            };
 
        const distance = getDistance(
-           {
+          {
              latitude: markerDb.latitude,
-            longitude: markerDb.longitude,
-             },
-           { latitude, longitude }
-             )
+             longitude: markerDb.longitude,
+          },
+          { 
+            latitude, 
+            longitude 
+          });
             
-           console.log("Distance: " + distance);        
+           console.log("Distance: " + distance);   
+           
+           setMarkerDbPosition(markerDb);
+           setShowPolyline(true);
+
       }
       
     };
@@ -123,6 +129,14 @@ loadFonts();
                     title="Marcador"
                     description="Este es el centro del mapa" />
                    )}
+                   {showPolyline && markerDbPosition && (
+                    <Polyline
+                    coordinates={[markerDbPosition, markerPosition]} //specify our coordinates
+                    strokeColor={"#000"}
+                    strokeWidth={3}
+                    lineDashPattern={[1]}
+                  />
+                   )}
               </MapView>
               <View pointerEvents="none" style={styles.mapCenterMarkerView}>
                 <Image 
@@ -156,7 +170,7 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
       height: '10%',
       width: '90%',
-      marginTop: '20%',
+      marginTop: '10%',
       zIndex: 2,
       //backgroundColor: 'blue',
       justifyContent: 'center',
@@ -221,7 +235,7 @@ const styles = StyleSheet.create({
     },
     question:{
       fontFamily: 'Dong',
-      fontSize: 29,
+      fontSize: 25,
       textAlign: 'center',
       color: '#232324',
 
