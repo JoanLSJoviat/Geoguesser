@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, Image, StyleSheet, Button} from 'react-na
 import MapView, { Marker, Polyline } from 'react-native-maps';
 import CrosshairImage from '../img/pointer.png'
 import RedPin from '../img/RedPin.png'
+import nextArrow from '../img/Arrow.png'
 import { db } from '../firebaseConfig';
 import { collection, getDocs } from 'firebase/firestore';
 import SetMarkBtn from '../img/setMarkBtn.png';
@@ -13,6 +14,7 @@ import getDistance from 'geolib/es/getDistance';
 const HomeScreen = () => {
     const [showMarker, setShowMarker] = React.useState(false);
     const [showPolyline, setShowPolyline] = React.useState(false);
+    const [showNextArrow, setShowNextArrow] = React.useState(false);
     const [refresh, setRefresh] = useState("");
     const [questionsList, setQuestionsList] = useState([]);
     const [currentQuestionIndex, setQuestionIndex] = useState(0);
@@ -66,6 +68,7 @@ loadFonts();
            
            setMarkerDbPosition(markerDb);
            setShowPolyline(true);
+           setShowNextArrow(true);
 
       }
       
@@ -151,6 +154,11 @@ loadFonts();
               ) : (
                 <Text>Loading quizz...</Text>
               )}
+          {showNextArrow && (
+             <TouchableOpacity style={styles.arrowContainer} onPress={nextQ}>
+             <Image style={styles.arrow} source={nextArrow}></Image>
+           </TouchableOpacity>
+          )}
           </View>          
       </View>
       
@@ -170,12 +178,11 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
       height: '10%',
       width: '90%',
-      marginTop: '10%',
+      marginTop: '15%',
       zIndex: 2,
       //backgroundColor: 'blue',
       justifyContent: 'center',
       marginBottom: '5%',
-     // marginTop: '30%',
     },
     checkContainer:{
       height: '100%',
@@ -240,6 +247,18 @@ const styles = StyleSheet.create({
       color: '#232324',
 
     },
+    arrowContainer: {
+      //backgroundColor: 'green',
+      width: '15%',
+      height: '35%',
+      marginTop: '8%',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    arrow: {
+      width: '100%',
+      height: '80%',
+    }
 
 });
 
