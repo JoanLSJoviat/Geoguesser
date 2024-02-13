@@ -48,6 +48,7 @@ loadFonts();
       console.log("Check");
      // if (currentQuestionIndex < questionsList.length-1){
        // console.log(questionsList[currentQuestionIndex+1].Title);
+       if (markerPosition){
         setShowMarker(true); 
         const { latitude, longitude } = markerPosition;
         const markerDb = {
@@ -78,6 +79,7 @@ loadFonts();
            setShowNextArrow(true);
 
       }
+       }
       
     };
 
@@ -178,6 +180,9 @@ loadFonts();
               <Image style={styles.arrow} source={nextArrow}></Image>
             </TouchableOpacity>
             )}
+            <View style={styles.pointsContainer}>
+               <Text style={styles.points}>POINTS</Text>
+            </View>
           </View>          
       </View>
       
@@ -280,16 +285,33 @@ const styles = StyleSheet.create({
     distanceContainer:{
       position: 'absolute',
       height: '8%',
-      width: '70%',
-    //  backgroundColor: 'yellow',
-      alignItems: "center",
+      width: '90%',
+      marginLeft: '5%',
+     // backgroundColor: 'white',
+      //alignItems: "center",
       justifyContent: 'center',
-      marginTop: '5%',
+      marginTop: '3%',
     },
     distance: {
       fontWeight: 'bold',
-      fontSize: 20,
-    }
+      fontSize: 18,
+      color: 'white',
+      textAlign: 'center',
+    },
+    pointsContainer: {
+      height: '15%',
+      width: '90%',
+     // backgroundColor: 'yellow',
+      marginTop: '10%',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    points: {
+      fontFamily: 'Dong',
+      fontSize: 25,
+      textAlign: 'center',
+      color: '#232324',
+    },
 
 });
 
