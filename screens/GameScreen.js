@@ -21,6 +21,7 @@ const HomeScreen = () => {
     const mapRef = useRef(null);
     const [markerPosition, setMarkerPosition] = useState(null);
     const [markerDbPosition, setMarkerDbPosition] = useState(null);
+    const [distance, setDistance] = useState(null);
 
 
 const loadFonts = async () => {
@@ -45,7 +46,7 @@ loadFonts();
 
     const check = () => {
       console.log("Check");
-      if (currentQuestionIndex < questionsList.length-1){
+     // if (currentQuestionIndex < questionsList.length-1){
        // console.log(questionsList[currentQuestionIndex+1].Title);
         setShowMarker(true); 
         const { latitude, longitude } = markerPosition;
@@ -54,7 +55,7 @@ loadFonts();
            longitude: parseFloat(questionsList[currentQuestionIndex].Lon),
            };
 
-       const distance = getDistance(
+       const dist = getDistance(
           {
              latitude: markerDb.latitude,
              longitude: markerDb.longitude,
@@ -64,10 +65,16 @@ loadFonts();
             longitude 
           });
             
-           console.log("Distance: " + distance);   
+           
+           setDistance(dist);
+           console.log("Distance: " + dist);   
+           console.log("Distance general:" + distance);
            
            setMarkerDbPosition(markerDb);
            setShowPolyline(true);
+
+           if (currentQuestionIndex < questionsList.length-1){
+
            setShowNextArrow(true);
 
       }
@@ -79,6 +86,13 @@ loadFonts();
      if (currentQuestionIndex < questionsList.length - 1) {
       console.log(questionsList[currentQuestionIndex + 1].Title);
       setQuestionIndex(currentQuestionIndex + 1);
+      setShowMarker(false);
+      setShowPolyline(false);
+      setMarkerDbPosition(null);
+      setMarkerPosition(null);
+      setShowNextArrow(false);
+      setDistance(null);
+
      
      }
     };
@@ -141,6 +155,11 @@ loadFonts();
                   />
                    )}
               </MapView>
+              {distance && (
+              <View style={styles.distanceContainer}>
+                  <Text style={styles.distance}>{"Distance: " + distance +"m"}</Text>
+              </View>
+               )}
               <View pointerEvents="none" style={styles.mapCenterMarkerView}>
                 <Image 
                     style={{width:'10%', height:'10%'}}
@@ -148,17 +167,17 @@ loadFonts();
                 />
             </View>
           </View> 
-          <View style={styles.questionContainer}>
-          {questionsList.length > 0 ?  (
-                <Text style={styles.question}>{questionsList[currentQuestionIndex].Title}</Text>
-              ) : (
-                <Text>Loading quizz...</Text>
-              )}
-          {showNextArrow && (
-             <TouchableOpacity style={styles.arrowContainer} onPress={nextQ}>
-             <Image style={styles.arrow} source={nextArrow}></Image>
-           </TouchableOpacity>
-          )}
+          <View style={styles.footer}>
+            {questionsList.length > 0 ?  (
+                  <Text style={styles.question}>{questionsList[currentQuestionIndex].Title}</Text>
+                ) : (
+                  <Text>Loading quizz...</Text>
+                )}
+            {showNextArrow && (
+            <TouchableOpacity style={styles.arrowContainer} onPress={nextQ}>
+              <Image style={styles.arrow} source={nextArrow}></Image>
+            </TouchableOpacity>
+            )}
           </View>          
       </View>
       
@@ -176,11 +195,11 @@ const styles = StyleSheet.create({
     },
     buttonsContainer:  {
       flexDirection: 'row',
-      height: '10%',
+      height: '9%',
       width: '90%',
       marginTop: '15%',
       zIndex: 2,
-      //backgroundColor: 'blue',
+    //  backgroundColor: 'blue',
       justifyContent: 'center',
       marginBottom: '5%',
     },
@@ -191,7 +210,7 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       justifyContent: 'center',
       borderRadius: 70,
-      marginLeft: '10%',
+      marginLeft: '15%',
     },
     setMarkContainer: {
       height: '100%',
@@ -209,7 +228,7 @@ const styles = StyleSheet.create({
     },
     mapContainer: {
         width: '90%',
-        height: '50%',
+        height: '45%',
         backgroundColor: 'blue',
         borderRadius: 20,
         overflow: 'hidden',
@@ -227,14 +246,13 @@ const styles = StyleSheet.create({
         alignItems: "center",
 
     },
-    questionContainer: {
-      
+    footer: {
       flex: 1,
       height: '20%',
-     // backgroundColor: 'blue',
+    //  backgroundColor: 'blue',
       width: '100%',
       zIndex: 3,
-      marginTop: '5%',
+     // marginTop: '5%',
       alignItems: 'center',
       justifyContent: 'top',
       padding: 20,
@@ -248,16 +266,29 @@ const styles = StyleSheet.create({
 
     },
     arrowContainer: {
-      //backgroundColor: 'green',
-      width: '15%',
-      height: '35%',
+     // backgroundColor: 'green',
+      width: '12%',
+      height: '15%',
       marginTop: '8%',
       justifyContent: 'center',
       alignItems: 'center',
     },
     arrow: {
       width: '100%',
-      height: '80%',
+      height: '100%',
+    },
+    distanceContainer:{
+      position: 'absolute',
+      height: '8%',
+      width: '70%',
+    //  backgroundColor: 'yellow',
+      alignItems: "center",
+      justifyContent: 'center',
+      marginTop: '5%',
+    },
+    distance: {
+      fontWeight: 'bold',
+      fontSize: 20,
     }
 
 });
