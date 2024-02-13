@@ -22,6 +22,8 @@ const HomeScreen = () => {
     const [markerPosition, setMarkerPosition] = useState(null);
     const [markerDbPosition, setMarkerDbPosition] = useState(null);
     const [distance, setDistance] = useState(null);
+    const [points, setPoints] = useState(0);
+    const [showPoints, setShowPoints] = useState(false);
 
 
 const loadFonts = async () => {
@@ -70,7 +72,7 @@ loadFonts();
            setDistance(dist);
            console.log("Distance: " + dist);   
            console.log("Distance general:" + distance);
-           
+           calculatePoints(dist);
            setMarkerDbPosition(markerDb);
            setShowPolyline(true);
 
@@ -94,9 +96,28 @@ loadFonts();
       setMarkerPosition(null);
       setShowNextArrow(false);
       setDistance(null);
-
+      setShowPoints(false);
+      setPoints(0);
      
      }
+    };
+
+    const calculatePoints = (distMeters) => {
+
+    
+        if (distMeters >= 0 && distMeters <= 200000){
+          setPoints(100);
+        }
+
+        if (distMeters > 200000 && distMeters <= 400000) {
+          setPoints(50);
+        }
+        else {
+          setPoints(10);
+        }
+      
+        setShowPoints(true);
+
     };
 
 
@@ -180,9 +201,12 @@ loadFonts();
               <Image style={styles.arrow} source={nextArrow}></Image>
             </TouchableOpacity>
             )}
-            <View style={styles.pointsContainer}>
-               <Text style={styles.points}>POINTS</Text>
+            {showPoints && (
+              <View style={styles.pointsContainer}>
+              <Text style={styles.pointsLbl}>Points:</Text>
+              <Text style={styles.points}>{points}</Text>
             </View>
+            )}
           </View>          
       </View>
       
@@ -299,18 +323,23 @@ const styles = StyleSheet.create({
       textAlign: 'center',
     },
     pointsContainer: {
+      flexDirection: 'row',
       height: '15%',
-      width: '90%',
+      width: '100%',
      // backgroundColor: 'yellow',
       marginTop: '10%',
       justifyContent: 'center',
       alignItems: 'center',
     },
-    points: {
+    pointsLbl: {
       fontFamily: 'Dong',
+      fontSize: 25,
+    },
+    points: {
       fontSize: 25,
       textAlign: 'center',
       color: '#232324',
+      marginLeft: '3%',
     },
 
 });
