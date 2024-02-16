@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet, Button} from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import MapView, { Marker, Polyline } from 'react-native-maps';
 import CrosshairImage from '../img/pointer.png'
 import RedPin from '../img/RedPin.png'
@@ -24,6 +25,9 @@ const HomeScreen = () => {
     const [distance, setDistance] = useState(null);
     const [points, setPoints] = useState(0);
     const [showPoints, setShowPoints] = useState(false);
+    const [totalPoints, setTotalPoints] = useState(0);
+    const [hasChecked, setHasChecked] = useState(false);
+    const { navigate } = useNavigation();
 
 
 const loadFonts = async () => {
@@ -76,11 +80,13 @@ loadFonts();
            setMarkerDbPosition(markerDb);
            setShowPolyline(true);
 
-           if (currentQuestionIndex < questionsList.length-1){
+           if (currentQuestionIndex <= questionsList.length -1){
 
            setShowNextArrow(true);
 
-      }
+          }
+
+          setHasChecked(true);
        }
       
     };
@@ -88,7 +94,7 @@ loadFonts();
     const nextQ = () => {
       console.log("next question");
      if (currentQuestionIndex < questionsList.length - 1) {
-      console.log(questionsList[currentQuestionIndex + 1].Title);
+      //console.log(questionsList[currentQuestionIndex + 1].Title);
       setQuestionIndex(currentQuestionIndex + 1);
       setShowMarker(false);
       setShowPolyline(false);
@@ -97,26 +103,50 @@ loadFonts();
       setShowNextArrow(false);
       setDistance(null);
       setShowPoints(false);
+      setHasChecked(false);
       setPoints(0);
-     
      }
+
+     else if (currentQuestionIndex == questionsList.length - 1){
+     // console.log("NEXT SCREEN");
+      navigate('Results', { totalPoints });
+     }
+
     };
 
     const calculatePoints = (distMeters) => {
-
-    
+        let newPoints = 0;
+        
+      if (!hasChecked){
         if (distMeters >= 0 && distMeters <= 200000){
           setPoints(100);
+          newPoints = 100;
         }
 
-        if (distMeters > 200000 && distMeters <= 400000) {
+        else if (distMeters > 200000 && distMeters <= 400000) {
           setPoints(50);
+          newPoints = 50;
         }
-        else {
+        
+        else if (distMeters > 400000 && distMeters <= 600000) {
+          setPoints(20);
+          newPoints = 20;
+        }
+
+        else if (distMeters > 600000 && distMeters <= 900000) {
           setPoints(10);
+          newPoints = 10;
+        }
+
+        else {
+          setPoints(0);
         }
       
         setShowPoints(true);
+        setTotalPoints((prevTotalPoints) => prevTotalPoints + newPoints);
+        console.log("Total points: " + totalPoints);
+        console.log("has checked: " + hasChecked);
+      }
 
     };
 
