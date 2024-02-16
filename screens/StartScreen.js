@@ -21,7 +21,10 @@ const StartScreen = ({ navigation }) => {
             <TouchableOpacity style={styles.btnContainer} onPress={() => onPress({ navigation })}>
                 <Image style={styles.btn} source={StartBtn}></Image>
             </TouchableOpacity>
+            <View style={styles.picContainer}>
             <Image source={Pic} style={styles.backgroundPic}/>
+            </View>
+           
         </View>
     );
 }
@@ -38,13 +41,17 @@ const styles = StyleSheet.create({
     header: {   
         zIndex: 2,
     },
-    backgroundPic: {
-       // position: 'absolute',
-        zIndex: 1,
-        width: '140%',
+    picContainer: {
+        flex: 1,
+        width: '100%',
         height: '50%',
-        marginTop: '20%',
-        marginRight: '50%',
+       // marginEnd: '60%',
+    },
+    backgroundPic: {
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+        marginTop: '7%',
     },   
     btnContainer: {
         height: '10%',
@@ -54,7 +61,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         borderRadius: 70,
         zIndex: 2,
-        marginTop: '20%',
+        marginTop: '10%',
     },
     btn: {
         position: 'absolute',

@@ -32,9 +32,9 @@ const HomeScreen = () => {
 
 const loadFonts = async () => {
   await Font.loadAsync({
-    Catways: require('../assets/fonts/Catways.ttf'),
+   
     Dong: require('../assets/fonts/DongporaDemo.otf'),
-    Dreamy: require('../assets/fonts/DreamyWallabies.ttf'),
+   
   });
 };
 
@@ -118,22 +118,22 @@ loadFonts();
         let newPoints = 0;
         
       if (!hasChecked){
-        if (distMeters >= 0 && distMeters <= 200000){
+        if (distMeters >= 0 && distMeters <= 300000){
           setPoints(100);
           newPoints = 100;
         }
 
-        else if (distMeters > 200000 && distMeters <= 400000) {
+        else if (distMeters > 300000 && distMeters <= 700000) {
           setPoints(50);
           newPoints = 50;
         }
         
-        else if (distMeters > 400000 && distMeters <= 600000) {
+        else if (distMeters > 700000 && distMeters <= 1100000) {
           setPoints(20);
           newPoints = 20;
         }
 
-        else if (distMeters > 600000 && distMeters <= 900000) {
+        else if (distMeters > 1100000 && distMeters <= 1500000) {
           setPoints(10);
           newPoints = 10;
         }
@@ -215,7 +215,7 @@ loadFonts();
                )}
               <View pointerEvents="none" style={styles.mapCenterMarkerView}>
                 <Image 
-                    style={{width:'10%', height:'10%'}}
+                    style={{width:'15%', height:'15%'}}
                     source={CrosshairImage}  
                 />
             </View>

@@ -15,7 +15,7 @@ const Header = ({ imageSource }) => {
 const styles = StyleSheet.create({
     header: {
         width: '100%',
-        height: '30%',
+        height: '40%',
         alignItems: 'center',
         justifyContent: 'center',
         //backgroundColor: 'blue',
@@ -23,10 +23,10 @@ const styles = StyleSheet.create({
 
     },
     image: {
-        marginTop: '30%',
+        marginTop: '20%',
       //  marginLeft: '55%',
         width: '80%',
-        height: '90%',
+        height: '100%',
        // transform:[{ scaleX: -1 }, { scaleY: 1 }, { rotate: '-15deg' }],
         zIndex: 1,
        
